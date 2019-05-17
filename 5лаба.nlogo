@@ -1,4 +1,4 @@
-globals [i tip time]
+globals [i l tip timerazgr zanyato1 zanyato2 zanyato3]
 breed [boats1 b1]
 breed [boats2 b2]
 breed [boats3 b3]
@@ -19,14 +19,14 @@ ask patches with [pycor <= 17 and pycor >= 12 ] [ set pcolor 67 ]
   if prich1 + prich2 + prich3 != kolvo_p [user-message(word "Суммарное количество причалов разного типа должно равняться: " kolvo_p)]
    if kor1 + kor2 + kor3 != kolvo_k [user-message(word "Суммарное количество причалов разного типа должно равняться: " kolvo_k)]
 
-  create-ps1 prich1 [  set i i + 1 set size 30 / kolvo_p  setxy -18 + (i * 27 / kolvo_p) 15]
-  ask ps1 [set shape "house bungalow"]
+  create-ps1 prich1 [  set i i + 1 set size 30 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
+  ask ps1 [set shape "house bungalow" set label 1 set label-color black]
 
-  create-ps2 prich2 [  set i i + 1 set size 30 / kolvo_p  setxy -19 + (i * 30 / kolvo_p) 15]
-  ask ps2 [set shape "house colonial"]
+  create-ps2 prich2 [  set i i + 1 set size 30 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
+  ask ps2 [set shape "house colonial" set label 123 set label-color black]
 
   create-ps3 prich3 [  set i i + 1 set size 28 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
-  ask ps3 [set shape "house ranch"]
+  ask ps3 [set shape "house ranch" set label 13 set label-color black]
 
   set-default-shape boats1 "boat"
   set-default-shape boats2 "boat 3"
@@ -37,22 +37,27 @@ end
 ;;================================================================
 to go
 set tip random 6
- set time random-poisson 20
+ set timerazgr random-poisson 20
 
  if count boats1 < kor1
     [
- if tip = 0 [create-boats1 1 [set size 4 setxy random-xcor -15]]
+ if tip = 0 [create-boats1 1 [set size 4 setxy random-xcor -15 set label 1]]
     ]
+ ; wait 0.1
   if count boats2 < kor2
     [
- if tip = 1 [create-boats2 1 [set size 4 setxy random-xcor -10]]
+ if tip = 1 [create-boats2 1 [set size 4 setxy random-xcor -10 set label 2]]
     ]
+ ;  wait 0.1
     if count boats3 < kor3
     [
- if tip = 2 [create-boats3 1 [set size 3 setxy random-xcor -5]]
+ if tip = 2 [create-boats3 1 [set size 3 setxy random-xcor -5 set label 3]]
     ]
-
-
+ ;  wait 0.1
+  ;Причал 1 будет принимать только первый тип кораблей
+  if timerazgr > 25 [if count boats1 > 0 [ask one-of boats1[setxy -20 + (l * 33 / kolvo_p) 8 set size 2 set l l + 1 ]]]
+  ;причал 2 будет принимать все типы кораблей
+  ;Причал 3 будет принимать 1 и 3 типы кораблей
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -83,9 +88,9 @@ ticks
 30.0
 
 BUTTON
-8
+9
 331
-97
+98
 364
 Обновить
 setup
@@ -125,7 +130,7 @@ kolvo_p
 kolvo_p
 1
 10
-7.0
+5.0
 1
 1
 NIL
@@ -140,7 +145,7 @@ kolvo_k
 kolvo_k
 1
 30
-5.0
+10.0
 1
 1
 NIL
@@ -190,7 +195,7 @@ INPUTBOX
 118
 129
 prich1
-3.0
+2.0
 1
 0
 Number
@@ -201,7 +206,7 @@ INPUTBOX
 118
 202
 prich2
-4.0
+1.0
 1
 0
 Number
@@ -212,7 +217,7 @@ INPUTBOX
 118
 272
 prich3
-0.0
+2.0
 1
 0
 Number
@@ -223,7 +228,7 @@ INPUTBOX
 315
 130
 kor1
-2.0
+4.0
 1
 0
 Number
@@ -234,7 +239,7 @@ INPUTBOX
 316
 204
 kor2
-1.0
+3.0
 1
 0
 Number
@@ -245,7 +250,7 @@ INPUTBOX
 316
 275
 kor3
-2.0
+3.0
 1
 0
 Number
