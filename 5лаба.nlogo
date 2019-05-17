@@ -1,4 +1,4 @@
-globals [i i1]
+globals [i tip time]
 breed [boats1 b1]
 breed [boats2 b2]
 breed [boats3 b3]
@@ -10,7 +10,6 @@ breed [ps3 p3]
 
 ;;================================================================
 to setup
-set i i1
     clear-all
 reset-ticks
 
@@ -28,11 +27,30 @@ ask patches with [pycor <= 17 and pycor >= 12 ] [ set pcolor 67 ]
 
   create-ps3 prich3 [  set i i + 1 set size 28 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
   ask ps3 [set shape "house ranch"]
+
+  set-default-shape boats1 "boat"
+  set-default-shape boats2 "boat 3"
+  set-default-shape boats3 "sailboat side"
 end
 
 
 ;;================================================================
 to go
+set tip random 6
+ set time random-poisson 20
+
+ if count boats1 < kor1
+    [
+ if tip = 0 [create-boats1 1 [set size 4 setxy random-xcor -15]]
+    ]
+  if count boats2 < kor2
+    [
+ if tip = 1 [create-boats2 1 [set size 4 setxy random-xcor -10]]
+    ]
+    if count boats3 < kor3
+    [
+ if tip = 2 [create-boats3 1 [set size 3 setxy random-xcor -5]]
+    ]
 
 
 end
@@ -107,7 +125,7 @@ kolvo_p
 kolvo_p
 1
 10
-4.0
+7.0
 1
 1
 NIL
@@ -172,7 +190,7 @@ INPUTBOX
 118
 129
 prich1
-2.0
+3.0
 1
 0
 Number
@@ -183,7 +201,7 @@ INPUTBOX
 118
 202
 prich2
-1.0
+4.0
 1
 0
 Number
@@ -194,7 +212,7 @@ INPUTBOX
 118
 272
 prich3
-1.0
+0.0
 1
 0
 Number
@@ -368,8 +386,8 @@ false
 Polygon -5825686 true false 63 162 90 207 223 207 290 162
 Rectangle -6459832 true false 150 32 157 162
 Polygon -1184463 true false 150 34 105 45 145 47 147 48 149 49
-Polygon -11221820 true false 158 37 172 45 188 59 202 79 217 109 220 130 218 147 204 156 158 156 161 142 170 123 170 102 169 88 165 62
-Polygon -11221820 true false 149 66 142 78 139 96 141 111 146 139 148 147 110 147 113 131 118 106 126 71
+Polygon -1 true false 158 37 172 45 188 59 202 79 217 109 220 130 218 147 204 156 158 156 161 142 170 123 170 102 169 88 165 62
+Polygon -1 true false 149 66 142 78 139 96 141 111 146 139 148 147 110 147 113 131 118 106 126 71
 
 box
 false
