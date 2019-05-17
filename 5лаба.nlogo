@@ -1,4 +1,4 @@
-globals [i l tip timerazgr zanyato1 zanyato2 zanyato3]
+globals [i l1 l2 l3 tip timerazgr wh2 dopwh2 sozd wh3]
 breed [boats1 b1]
 breed [boats2 b2]
 breed [boats3 b3]
@@ -19,45 +19,98 @@ ask patches with [pycor <= 17 and pycor >= 12 ] [ set pcolor 67 ]
   if prich1 + prich2 + prich3 != kolvo_p [user-message(word "Суммарное количество причалов разного типа должно равняться: " kolvo_p)]
    if kor1 + kor2 + kor3 != kolvo_k [user-message(word "Суммарное количество причалов разного типа должно равняться: " kolvo_k)]
 
-  create-ps1 prich1 [  set i i + 1 set size 30 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
-  ask ps1 [set shape "house bungalow" set label 1 set label-color black]
+  create-ps1 prich1 [  set i i + 1 set size 30 / kolvo_p  setxy -25 + (i * 35 / kolvo_p) 15]
+ ; create-ps1 prich1 [set i i + 1 set size 30 / kolvo_p setxy -25 + (i * 35 / kolvo_p) 15]
+  ask ps1 [set shape "house bungalow" set label 1 set label-color black ]
 
-  create-ps2 prich2 [  set i i + 1 set size 30 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
+  create-ps2 prich2 [ set i i + 1 set size 30 / kolvo_p  setxy -25 + (i * 35 / kolvo_p) 15]
   ask ps2 [set shape "house colonial" set label 123 set label-color black]
 
-  create-ps3 prich3 [  set i i + 1 set size 28 / kolvo_p  setxy -20 + (i * 33 / kolvo_p) 15]
+  create-ps3 prich3 [  set i i + 1 set size 28 / kolvo_p  setxy -25 + (i * 35 / kolvo_p) 15]
   ask ps3 [set shape "house ranch" set label 13 set label-color black]
 
   set-default-shape boats1 "boat"
   set-default-shape boats2 "boat 3"
   set-default-shape boats3 "sailboat side"
+
+  set wh2 prich1 + 1
+  set wh3 prich1 + 1
+    set dopwh2 prich1 + 1
 end
 
 
 ;;================================================================
 to go
+   set-current-plot "graf"
+  set-current-plot-pen "Тип 1"
+   plot count boats1
+
+   set-current-plot-pen "Тип 2"
+  plot count boats2
+
+   set-current-plot-pen "Тип 3"
+  plot count boats3
+;
 set tip random 6
  set timerazgr random-poisson 20
-
+  set sozd random-poisson 10
+  if sozd > 8[
  if count boats1 < kor1
     [
  if tip = 0 [create-boats1 1 [set size 4 setxy random-xcor -15 set label 1]]
     ]
+  ]
  ; wait 0.1
+  if sozd > 12[
   if count boats2 < kor2
     [
  if tip = 1 [create-boats2 1 [set size 4 setxy random-xcor -10 set label 2]]
     ]
+  ]
  ;  wait 0.1
+  if sozd > 10[
     if count boats3 < kor3
     [
  if tip = 2 [create-boats3 1 [set size 3 setxy random-xcor -5 set label 3]]
     ]
  ;  wait 0.1
+  ]
+  if i = kolvo_p [set i 0 ]
   ;Причал 1 будет принимать только первый тип кораблей
-  if timerazgr > 25 [if count boats1 > 0 [ask one-of boats1[setxy -20 + (l * 33 / kolvo_p) 8 set size 2 set l l + 1 ]]]
-  ;причал 2 будет принимать все типы кораблей
+   ;причал 2 будет принимать все типы кораблей
   ;Причал 3 будет принимать 1 и 3 типы кораблей
+
+  if timerazgr > 25 [
+     if count boats1 > 0 [
+
+        ask one-of boats1[ set l1 l1 + 1
+              setxy -25 + (l1 * 35 / kolvo_p) 9 set size 2  ]
+      if l1 = kolvo_p [set l1 0 ]
+      wait 0.3
+     ask boats1 with [pycor > 8] [die]
+  ]]
+
+  if timerazgr > 30 [
+     if count boats2 > 0 [
+
+        ask one-of boats2[ set l2 l2 + 1
+            setxy -25 + (wh2 * 35 / kolvo_p) 9 set size 2  set wh2 wh2 + 1]
+
+      if l2 = prich2 [set l2 0 set wh2 dopwh2]
+      wait 0.3
+      ask boats2 with [pycor > 8] [die]
+  ]]
+
+  if timerazgr > 28 [
+    if count boats3 > 0 [
+
+        ask one-of boats3[ set l3 l3 + 1
+             setxy -25 + (wh3 * 35 / kolvo_p) 9 set size 2 set wh3 wh3 + 1 ]
+    if l3 = prich2 + prich3 [set l3 0 set wh3 dopwh2]
+    wait 0.3
+      ask boats3 with [pycor > 8] [die]
+  ]]
+
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -69,7 +122,7 @@ GRAPHICS-WINDOW
 -1
 13.0
 1
-10
+11
 1
 1
 1
@@ -88,10 +141,10 @@ ticks
 30.0
 
 BUTTON
-9
-331
-98
-364
+83
+328
+172
+361
 Обновить
 setup
 NIL
@@ -105,10 +158,10 @@ NIL
 1
 
 BUTTON
-124
-331
-198
-364
+199
+329
+273
+362
 Начать
 go
 T
@@ -128,9 +181,9 @@ SLIDER
 62
 kolvo_p
 kolvo_p
-1
+3
 10
-5.0
+3.0
 1
 1
 NIL
@@ -152,22 +205,24 @@ NIL
 HORIZONTAL
 
 PLOT
-92
+17
 372
 360
 492
 graf
 время
-клиенты
+Корабли
 0.0
 100.0
 0.0
-20.0
+10.0
 true
 true
 "" ""
 PENS
-"Работники" 1.0 0 -13345367 true "" "plot count turtles"
+"Тип 1" 1.0 0 -817084 true "" "plot count boats1"
+"Тип 2" 1.0 0 -4699768 true "" "plot count boats2"
+"Тип 3" 1.0 0 -13840069 true "" "plot count boats3"
 
 TEXTBOX
 29
@@ -195,7 +250,7 @@ INPUTBOX
 118
 129
 prich1
-2.0
+1.0
 1
 0
 Number
@@ -217,16 +272,16 @@ INPUTBOX
 118
 272
 prich3
-2.0
+1.0
 1
 0
 Number
 
 INPUTBOX
-265
-70
-315
-130
+279
+69
+329
+129
 kor1
 4.0
 1
@@ -234,10 +289,10 @@ kor1
 Number
 
 INPUTBOX
-266
-144
-316
-204
+280
+143
+330
+203
 kor2
 3.0
 1
@@ -245,10 +300,10 @@ kor2
 Number
 
 INPUTBOX
-266
-215
-316
-275
+280
+214
+330
+274
 kor3
 3.0
 1
